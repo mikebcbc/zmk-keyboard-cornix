@@ -60,6 +60,15 @@
             bindings = <&kp LS(LA(DOWN_ARROW))>;
             label = "HIGHLIGHT_DOWN";
         };
+
+        ctrl_shift: ctrl_shift {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <0>;
+            tap-ms = <0>;
+            bindings = <&kp LEFT_CONTROL>, <&kp LEFT_SHIFT>;
+            label = "CTRL_SHIFT";
+        };
     };
 
     keymap {
@@ -80,7 +89,7 @@
 &kp LEFT_ALT    &kp Q  &kp W  &kp E     &kp R      &kp T                                    &kp Y          &kp U        &kp I            &kp O    &kp P     &kp RIGHT_ALT
 &kp LCTRL       &kp A  &kp S  &kp D     &kp F      &kp G                                    &kp H          &kp J        &kp K            &kp L    &kp SEMI  &tog 4
 &sk LEFT_SHIFT  &kp Z  &kp X  &kp C     &kp V      &kp B        &kp CAPSLOCK  &kp K_MUTE    &kp N          &kp M        &kp COMMA        &kp DOT  &kp FSLH  &sl 3
-&none           &none  &none  &kp LGUI  &lt 1 TAB  &kp SPACE                                &kp BACKSPACE  &lt 2 ENTER  &tap_shift_caps  &none    &none     &none
+&none           &none  &none  &kp LGUI  &lt 1 TAB  &kp SPACE                                &kp BACKSPACE  &lt 2 ENTER  &tap_shift_caps  &ctrl_shift  &none  &none
             >;
 
             sensor-bindings =
@@ -140,7 +149,7 @@
 &kp ESCAPE    &kp TAB       &kp Q  &kp W      &kp E      &kp R                            &trans  &trans  &trans  &trans  &trans  &kp LA(LG(B))
 &kp NUMBER_1  &kp N2        &kp A  &kp S      &kp D      &kp F                            &trans  &trans  &trans  &trans  &trans  &trans
 &kp NUMBER_3  &kp NUMBER_4  &kp Z  &kp X      &kp C      &kp V     &trans    &trans       &trans  &trans  &trans  &trans  &trans  &mo 3
-&none         &none         &none  &kp LCTRL  &kp LSHFT  &kp SPACE                        &trans  &trans  &trans  &none   &none   &none
+&kp NUMBER_5  &kp NUMBER_6  &kp M  &kp LCTRL  &kp LSHFT  &kp SPACE                        &trans  &trans  &trans  &none   &none   &none
             >;
 
             sensor-bindings =
