@@ -9,6 +9,7 @@
 #include <behaviors/rgbled_widget.dtsi>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/pointing.h>
 
 &lt {
     tapping-term-ms = <135>;
@@ -75,6 +76,39 @@
             bindings = <&ind_bat &ind_con>;
             label = "IND_BOTH";
         };
+
+        // One discrete horizontal mouse-scroll step per encoder detent.
+        // Holds &msc for wait-ms so each tick produces a deterministic step.
+        msc_scroll_right: msc_scroll_right {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <30>;
+            bindings
+                = <&macro_press &msc SCRL_RIGHT>
+                , <&macro_release &msc SCRL_RIGHT>
+                ;
+            label = "MSC_SCROLL_RIGHT";
+        };
+
+        msc_scroll_left: msc_scroll_left {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <30>;
+            bindings
+                = <&macro_press &msc SCRL_LEFT>
+                , <&macro_release &msc SCRL_LEFT>
+                ;
+            label = "MSC_SCROLL_LEFT";
+        };
+    };
+
+    behaviors {
+        // Clockwise = scroll right, counter-clockwise = scroll left
+        rot_hscroll: rot_hscroll {
+            compatible = "zmk,behavior-sensor-rotate";
+            #sensor-binding-cells = <0>;
+            bindings = <&msc_scroll_right>, <&msc_scroll_left>;
+        };
     };
 
     keymap {
@@ -87,14 +121,14 @@
             // ╭────────────────────────────────────────────────╮               ╭────────────────────────────────────────────────╮
             // │ LALT  │  Q   │  W   │  E   │  R   │  T   │               │  Y   │  U   │  I   │  O   │  P   │ RALT  │
             // │ LCTRL │  A   │  S   │  D   │  F   │  G   ╰──╮         ╭──╯  H   │  J   │  K   │  L   │  ;   │ tog 4 │
-            // │ skSHFT│  Z   │  X   │  C   │  V   │  B   │MUTE╰────┬────╯CAPS│  N   │  M   │  ,   │  .   │  /   │ sl 3  │
+            // │ skSHFT│  Z   │  X   │  C   │  V   │  B   │CAPS╰────┬────╯togH │  N   │  M   │  ,   │  .   │  /   │ sl 3  │
             // │ none  │ none │ none │ GUI  │lt1TAB│ SPC  │     │     │ BKSP │lt2RET│skSHFT│ none │ none │ none  │
             // ╰────────────────────────────────────────────────────────┴────────────────────────────────────────────────────╯
 
             bindings = <
 &kp LEFT_ALT    &kp Q  &kp W  &kp E     &kp R      &kp T                                    &kp Y          &kp U        &kp I            &kp O    &kp P     &kp RIGHT_ALT
 &kp LCTRL       &kp A  &kp S  &kp D     &kp F      &kp G                                    &kp H          &kp J        &kp K            &kp L    &kp SEMI  &tog 4
-&sk LEFT_SHIFT  &kp Z  &kp X  &kp C     &kp V      &kp B        &kp K_MUTE      &kp CAPSLOCK    &kp N          &kp M        &kp COMMA        &kp DOT  &kp FSLH  &sl 3
+&sk LEFT_SHIFT  &kp Z  &kp X  &kp C     &kp V      &kp B        &kp CAPSLOCK    &tog 8          &kp N          &kp M        &kp COMMA        &kp DOT  &kp FSLH  &sl 3
 &none           &none  &none  &kp LGUI  &lt 1 TAB  &kp SPACE                                &kp BACKSPACE  &lt 2 ENTER  &sk RIGHT_SHIFT  &ctrl_shift  &none  &none
             >;
 
@@ -168,5 +202,23 @@
         extra_2 { status = "reserved"; };
 
         extra_3 { status = "reserved"; };
+
+        // Horizontal-scroll mode: right encoder scrolls left/right instead
+        // of up/down. Toggled on/off by the right encoder click (pos 31).
+        // All keys transparent except the encoder click, which toggles back.
+        scroll_horiz_layer {
+            display-name = "Scroll H";
+
+            bindings = <
+&trans  &trans  &trans  &trans  &trans  &trans                                    &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans                                    &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans        &trans          &tog 8      &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans                                    &trans  &trans  &trans  &trans  &trans  &trans
+            >;
+
+            sensor-bindings =
+                <&inc_dec_kp LC(EQUAL) LC(MINUS)>,
+                <&rot_hscroll>;
+        };
     };
 };
