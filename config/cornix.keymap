@@ -77,8 +77,6 @@
             label = "IND_BOTH";
         };
 
-        // One discrete horizontal mouse-scroll step per encoder detent.
-        // Holds &msc for wait-ms so each tick produces a deterministic step.
         msc_scroll_right: msc_scroll_right {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
@@ -103,7 +101,6 @@
     };
 
     behaviors {
-        // Clockwise = scroll right, counter-clockwise = scroll left
         rot_hscroll: rot_hscroll {
             compatible = "zmk,behavior-sensor-rotate";
             #sensor-binding-cells = <0>;
@@ -128,7 +125,7 @@
             bindings = <
 &kp LEFT_ALT    &kp Q  &kp W  &kp E     &kp R      &kp T                                    &kp Y          &kp U        &kp I            &kp O    &kp P     &kp RIGHT_ALT
 &kp LCTRL       &kp A  &kp S  &kp D     &kp F      &kp G                                    &kp H          &kp J        &kp K            &kp L    &kp SEMI  &tog 4
-&sk LEFT_SHIFT  &kp Z  &kp X  &kp C     &kp V      &kp B        &kp CAPSLOCK    &tog 8          &kp N          &kp M        &kp COMMA        &kp DOT  &kp FSLH  &sl 3
+&sk LEFT_SHIFT  &kp Z  &kp X  &kp C     &kp V      &kp B        &kp CAPSLOCK    &tog 5          &kp N          &kp M        &kp COMMA        &kp DOT  &kp FSLH  &sl 3
 &none           &none  &none  &kp LGUI  &lt 1 TAB  &kp SPACE                                &kp BACKSPACE  &lt 2 ENTER  &sk RIGHT_SHIFT  &ctrl_shift  &none  &none
             >;
 
@@ -197,22 +194,13 @@
                 <&inc_dec_kp PG_DN PG_UP>;
         };
 
-        extra_1 { status = "reserved"; };
-
-        extra_2 { status = "reserved"; };
-
-        extra_3 { status = "reserved"; };
-
-        // Horizontal-scroll mode: right encoder scrolls left/right instead
-        // of up/down. Toggled on/off by the right encoder click (pos 31).
-        // All keys transparent except the encoder click, which toggles back.
         scroll_horiz_layer {
             display-name = "Scroll H";
 
             bindings = <
 &trans  &trans  &trans  &trans  &trans  &trans                                    &trans  &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans                                    &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans        &trans          &tog 8      &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans        &trans          &tog 5      &trans  &trans  &trans  &trans  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans                                    &trans  &trans  &trans  &trans  &trans  &trans
             >;
 
@@ -220,5 +208,11 @@
                 <&inc_dec_kp LC(EQUAL) LC(MINUS)>,
                 <&rot_hscroll>;
         };
+
+        extra_1 { status = "reserved"; };
+
+        extra_2 { status = "reserved"; };
+
+        extra_3 { status = "reserved"; };
     };
 };
