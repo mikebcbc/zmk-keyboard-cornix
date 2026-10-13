@@ -9,6 +9,9 @@
 #include <behaviors/rgbled_widget.dtsi>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
+// Override default scroll value so one encoder detent produces at least
+// one scroll step (speed × trigger_period_ms / 1000 >= 1 → need >= 63).
+#define ZMK_POINTING_DEFAULT_SCRL_VAL 100
 #include <dt-bindings/zmk/pointing.h>
 
 &lt {
@@ -77,34 +80,17 @@
             label = "IND_BOTH";
         };
 
-        msc_scroll_right: msc_scroll_right {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            wait-ms = <30>;
-            bindings
-                = <&macro_press &msc SCRL_RIGHT>
-                , <&macro_release &msc SCRL_RIGHT>
-                ;
-            label = "MSC_SCROLL_RIGHT";
-        };
-
-        msc_scroll_left: msc_scroll_left {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            wait-ms = <30>;
-            bindings
-                = <&macro_press &msc SCRL_LEFT>
-                , <&macro_release &msc SCRL_LEFT>
-                ;
-            label = "MSC_SCROLL_LEFT";
-        };
     };
 
     behaviors {
+        // Clockwise = scroll right, counter-clockwise = scroll left.
+        // tap-ms must be >= the msc trigger period (16ms) so at least one
+        // input tick fires per encoder detent.
         rot_hscroll: rot_hscroll {
             compatible = "zmk,behavior-sensor-rotate";
             #sensor-binding-cells = <0>;
-            bindings = <&msc_scroll_right>, <&msc_scroll_left>;
+            tap-ms = <20>;
+            bindings = <&msc SCRL_RIGHT>, <&msc SCRL_LEFT>;
         };
     };
 
